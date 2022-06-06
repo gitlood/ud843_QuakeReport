@@ -1,39 +1,48 @@
 package com.example.android.quakereport;
 
-import java.util.Date;
-
 public class Earthquake {
-    private String where;
-    private Double magnitude;
-    private String date;
+    private String mLocation;
+    private String mMagnitude;
+    private Long mTimeInMilliseconds;
 
-    public Earthquake(String where, Double magnitude, String date) {
-        this.where = where;
-        this.magnitude = magnitude;
-        this.date = date;
+    /**
+     * Constructs a new {@link Earthquake} object.
+     *
+     * @param magnitude is the magnitude (size) of the earthquake
+     * @param location is the city location of the earthquake
+     * @param timeInMilliseconds is the time in milliseconds (from the Epoch) when the
+     *  earthquake happened
+     */
+    public Earthquake(String location, String magnitude, Long timeInMilliseconds) {
+        mLocation = location;
+        mMagnitude = magnitude;
+        mTimeInMilliseconds = timeInMilliseconds;
     }
 
-    public String getWhere() {
-        return where;
+    public String getLocation() {
+        return mLocation;
     }
 
-    public void setWhere(String where) {
-        this.where = where;
+    public void setLocation(String location) {
+        this.mLocation = location;
     }
 
-    public Double getMagnitude() {
-        return magnitude;
+    public String getMagnitude() {
+        return mMagnitude;
     }
 
-    public void setMagnitude(Double magnitude) {
-        this.magnitude = magnitude;
+    public void setMagnitude(String magnitude) {
+        this.mMagnitude = magnitude;
     }
 
-    public String getDate() {
-        return date;
+    public void setTimeInMillseconds(Long timeInMillseconds) {
+        this.mTimeInMilliseconds = timeInMillseconds;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    /**
+     * Returns the time of the earthquake.
+     */
+    public long getTimeInMilliseconds() {
+        return mTimeInMilliseconds;
     }
 }
