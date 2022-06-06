@@ -54,7 +54,7 @@ public final class QueryUtils {
             JSONArray jsonArray = json.getJSONArray("features");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject earthQuakeData = jsonArray.getJSONObject(i).getJSONObject("properties");
-                earthquakes.add(new Earthquake(earthQuakeData.get("place").toString(), earthQuakeData.getString("mag"), earthQuakeData.getLong("time")));
+                earthquakes.add(new Earthquake(earthQuakeData.get("place").toString(), earthQuakeData.getDouble("mag"), earthQuakeData.getLong("time")));
             }
 
         } catch (JSONException e) {
