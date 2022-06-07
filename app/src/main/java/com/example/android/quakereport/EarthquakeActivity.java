@@ -52,7 +52,8 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         setContentView(R.layout.earthquake_activity);
 // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = findViewById(R.id.list);
-
+        emptyView = findViewById(R.id.empty_view);
+        earthquakeListView.setEmptyView(emptyView);
         // Create a new adapter that takes an empty list of earthquakes as input
         earthquakeAdapters = new EarthquakeAdapter(this, new ArrayList<>());
         // Set the adapter on the {@link ListView}
