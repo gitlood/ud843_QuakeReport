@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,7 +46,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     private EarthquakeAdapter earthquakeAdapters;
 
     private TextView emptyView;
-
+private ProgressBar progressbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +54,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = findViewById(R.id.list);
         emptyView = findViewById(R.id.empty_view);
+        progressbar = findViewById(R.id.progressbar);
         earthquakeListView.setEmptyView(emptyView);
         // Create a new adapter that takes an empty list of earthquakes as input
         earthquakeAdapters = new EarthquakeAdapter(this, new ArrayList<>());
@@ -87,11 +89,14 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
+        progressbar.setVisibility(View.GONE);
         // Set empty state text to display "No earthquakes found."
         emptyView.setText(R.string.no_earthquakes);
+
+        // Clear the adapter of previous earthquake data
+        earthquakeAdapters.clear();
+
         if (earthquakes != null && !earthquakes.isEmpty()) {
-            // Clear the adapter of previous earthquake data
-            earthquakeAdapters.clear();
             // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
             // data set. This will trigger the ListView to update.
             earthquakeAdapters.addAll(earthquakes);
