@@ -15,15 +15,18 @@
  */
 package com.example.android.quakereport;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EarthquakeActivity extends AppCompatActivity {
+    private static final String USGS_REQUEST_URL =
+            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2016-01-01&endtime=2016-05-02&minfelt=50&minmagnitude=5";
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
@@ -32,19 +35,48 @@ public class EarthquakeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        // Create a fake list of earthquake locations.
-        ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
+        EarthquakeAsyncTask task = new EarthquakeAsyncTask();
+        task.execute(USGS_REQUEST_URL);
+    }
 
+
+    private void updateUi(List<Earthquake> earthquakes) {
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = findViewById(R.id.list);
-
         ArrayList<EarthquakeAdapter> earthquakeAdapters = new ArrayList<>();
-
-        for(int i = 0; i < earthquakes.size(); i++) {
+        for (int i = 0; i < earthquakes.size(); i++) {
             earthquakeAdapters.add(new EarthquakeAdapter(this, earthquakes));
             // Set the adapter on the {@link ListView}
             // so the list can be populated in the user interface
             earthquakeListView.setAdapter(earthquakeAdapters.get(i));
+        }
+    }
+
+    private class EarthquakeAsyncTask extends AsyncTask<String, Void, List<Earthquake>> {
+
+        @Override
+        protected List<Earthquake> doInBackground(String... urls) {
+            // Don't perform the request if there are no URLs, or the first URL is null.
+            if (urls.length < 1 || urls[0] == null) {
+                return null;
+            }
+            return QueryUtils.fetchEarthquakeData(urls[0]);
+        }
+
+        /**
+         * This method is invoked on the main UI thread after the background work has been
+         * completed.
+         * <p>
+         * It IS okay to modify the UI within this method. We take the {@link List<Earthquake>} object
+         * (which was returned from the doInBackground() method) and update the views on the screen.
+         */
+        protected void onPostExecute(List<Earthquake> result) {
+            // If there is no result, do nothing.
+            if (result == null) {
+                return;
+            }
+
+            updateUi(result);
         }
     }
 }
